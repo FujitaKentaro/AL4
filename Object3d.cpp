@@ -417,36 +417,65 @@ void Object3d::CreateModel()
 	string line;
 	while (getline(file,line)){
 
-		std::istringstream linestream(line);
+		std::istringstream line_stream(line);
 
 		string key;
-		getline(linestream,key,' ');
+		getline(line_stream,key,' ');
 
 		if (key == "v") {
 			// XYZ 座標読み込み
 			XMFLOAT3 position{};
-			linestream >> position.x;
-			linestream >> position.y;
-			linestream >> position.z;
+			line_stream >> position.x;
+			line_stream >> position.y;
+			line_stream >> position.z;
 			// 座標データに追加
 			positions.emplace_back(position);
-			// 頂点データに追加
-			VertexPosNormalUv vertex{};
-			vertex.pos = position;
-			vertices.emplace_back(vertex);
+			
+		}
+		// 先頭文字列がvtならテクスチャ
+		if (key == "vt") {
+			// U,V成分読み込み
+			XMFLOAT2 texcord{};
+			line_stream >> texcord.x;
+			line_stream >> texcord.y;
+			// V方向反転
+			texcord.y = 1.0f - texcord.y;
+			// テクスチャ座標データに追加
+			texcodes.emplace_back(texcord);
+		}
+		// 先頭文字がvnなら法線ベクトル
+		if (key == "vn") {
+			// XYZ成分読み込み
+			XMFLOAT3 nomal{};
+			line_stream >> nomal.x;
+			line_stream >> nomal.y;
+			line_stream >> nomal.z;
+			// 法線ベクトルデータに追加
+			nomals.emplace_back(nomal);
 		}
 
 		if (key == "f") {
 			// 半角スペース区切りで行の続きを読み込む
 			string index_string;
-			while (getline(linestream, index_string, ' '))
+			while (getline(line_stream, index_string, ' '))
 			{
 				// 頂点インデックス一個分の文字列をストリームに変換して解析しやすくする
 				std::istringstream index_stream(index_string);
-				unsigned short indexPosition;
+				unsigned short indexPosition,indexNormal,indexTexcord;
 				index_stream >> indexPosition;
+				index_stream.seekg(1, ios_base::cur);// /を飛ばす
+				index_stream >> indexTexcord;
+				index_stream.seekg(1, ios_base::cur);// /を飛ばす
+				index_stream >> indexNormal;
+				// 頂点データの追加
+				VertexPosNormalUv vertex{};
+				vertex.pos = positions[indexPosition - 1];
+				vertex.normal = nomals[indexNormal - 1];
+				vertex.uv = texcodes[indexTexcord-1];
+				vertices.emplace_back(vertex);
+
 				// 頂点インデックスに追加
-				indices.emplace_back(indexPosition - 1);
+				indices.emplace_back((unsigned short)indices.size());
 			}
 		}
 
