@@ -6,6 +6,8 @@
 #include <DirectXMath.h>
 #include <d3dx12.h>
 
+
+
 /// <summary>
 /// 3Dオブジェクト
 /// </summary>
@@ -36,8 +38,26 @@ public: // サブクラス
 		XMMATRIX mat;	// ３Ｄ変換行列
 	};
 
+	/// <summary>
+	/// マテリアル
+	/// </summary>
+	struct Material {
+		std::string name;	// マテリアル名
+		XMFLOAT3 ambient;	// アンビエント影響度
+		XMFLOAT3 diffuse;	// ディフューズ影響度
+		XMFLOAT3 specular;	// スペキュラー影響度
+		float alpha;		// アルファ
+		// コンストラクタ
+		Material() {
+			ambient = { 0.3f,0.3f,0.3f };
+			diffuse = { 0.0f,0.0f,0.0f, };
+			specular = { 0.0f,0.0f,0.0f };
+			alpha = 1.0f;
+		}
+	};
+
 private: // 定数
-	static const int division = 50;					// 分割数
+	static const int division = 50;			// 分割数
 	static const float radius;				// 底面の半径
 	static const float prizmHeight;			// 柱の高さ
 	static const int planeCount = division * 2 + division * 2;		// 面の数
@@ -142,6 +162,9 @@ private: // 静的メンバ変数
 	//// 頂点インデックス配列
 	//static unsigned short indices[planeCount * 3];
 	static std::vector<unsigned short> indices;
+
+	// マテリアル
+	static Material material;
 
 private:// 静的メンバ関数
 	/// <summary>

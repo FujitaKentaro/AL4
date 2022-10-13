@@ -13,6 +13,8 @@ using namespace DirectX;
 using namespace Microsoft::WRL;
 using namespace std;
 
+Object3d::Material Object3d::material;
+
 /// <summary>
 /// 静的メンバ変数の実体
 /// </summary>
