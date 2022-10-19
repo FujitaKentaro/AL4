@@ -61,7 +61,7 @@ void Object3d::StaticInitialize(ID3D12Device* device, int window_width, int wind
 	InitializeGraphicsPipeline();
 
 	// テクスチャ読み込み
-	LoadTexture();
+	//LoadTexture();
 
 	// モデル生成
 	CreateModel();
@@ -329,77 +329,78 @@ void Object3d::InitializeGraphicsPipeline()
 
 }
 
-void Object3d::LoadTexture()
-{
-	HRESULT result = S_FALSE;
-
-	TexMetadata metadata{};
-	ScratchImage scratchImg{};
-
-	// WICテクスチャのロード
-	result = LoadFromWICFile(L"Resources/tex1.png", WIC_FLAGS_NONE, &metadata, scratchImg);
-	assert(SUCCEEDED(result));
-
-	ScratchImage mipChain{};
-	// ミップマップ生成
-	result = GenerateMipMaps(
-		scratchImg.GetImages(), scratchImg.GetImageCount(), scratchImg.GetMetadata(),
-		TEX_FILTER_DEFAULT, 0, mipChain);
-	if (SUCCEEDED(result)) {
-		scratchImg = std::move(mipChain);
-		metadata = scratchImg.GetMetadata();
-	}
-
-	// 読み込んだディフューズテクスチャをSRGBとして扱う
-	metadata.format = MakeSRGB(metadata.format);
-
-	// リソース設定
-	CD3DX12_RESOURCE_DESC texresDesc = CD3DX12_RESOURCE_DESC::Tex2D(
-		metadata.format, metadata.width, (UINT)metadata.height, (UINT16)metadata.arraySize,
-		(UINT16)metadata.mipLevels);
-
-	// ヒーププロパティ
-	CD3DX12_HEAP_PROPERTIES heapProps =
-		CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0);
-
-	// テクスチャ用バッファの生成
-	result = device->CreateCommittedResource(
-		&heapProps, D3D12_HEAP_FLAG_NONE, &texresDesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ, // テクスチャ用指定
-		nullptr, IID_PPV_ARGS(&texbuff));
-	assert(SUCCEEDED(result));
-
-	// テクスチャバッファにデータ転送
-	for (size_t i = 0; i < metadata.mipLevels; i++) {
-		const Image* img = scratchImg.GetImage(i, 0, 0); // 生データ抽出
-		result = texbuff->WriteToSubresource(
-			(UINT)i,
-			nullptr,              // 全領域へコピー
-			img->pixels,          // 元データアドレス
-			(UINT)img->rowPitch,  // 1ラインサイズ
-			(UINT)img->slicePitch // 1枚サイズ
-		);
-		assert(SUCCEEDED(result));
-	}
-
-	// シェーダリソースビュー作成
-	cpuDescHandleSRV = CD3DX12_CPU_DESCRIPTOR_HANDLE(descHeap->GetCPUDescriptorHandleForHeapStart(), 0, descriptorHandleIncrementSize);
-	gpuDescHandleSRV = CD3DX12_GPU_DESCRIPTOR_HANDLE(descHeap->GetGPUDescriptorHandleForHeapStart(), 0, descriptorHandleIncrementSize);
-
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{}; // 設定構造体
-	D3D12_RESOURCE_DESC resDesc = texbuff->GetDesc();
-
-	srvDesc.Format = resDesc.Format;
-	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;//2Dテクスチャ
-	srvDesc.Texture2D.MipLevels = 1;
-
-	device->CreateShaderResourceView(texbuff.Get(), //ビューと関連付けるバッファ
-		&srvDesc, //テクスチャ設定情報
-		cpuDescHandleSRV
-	);
-
-}
+//
+//void Object3d::LoadTexture()
+//{
+//	HRESULT result = S_FALSE;
+//
+//	TexMetadata metadata{};
+//	ScratchImage scratchImg{};
+//
+//	// WICテクスチャのロード
+//	result = LoadFromWICFile(L"Resources/triangle_mat/tex1.png", WIC_FLAGS_NONE, &metadata, scratchImg);
+//	assert(SUCCEEDED(result));
+//
+//	ScratchImage mipChain{};
+//	// ミップマップ生成
+//	result = GenerateMipMaps(
+//		scratchImg.GetImages(), scratchImg.GetImageCount(), scratchImg.GetMetadata(),
+//		TEX_FILTER_DEFAULT, 0, mipChain);
+//	if (SUCCEEDED(result)) {
+//		scratchImg = std::move(mipChain);
+//		metadata = scratchImg.GetMetadata();
+//	}
+//
+//	// 読み込んだディフューズテクスチャをSRGBとして扱う
+//	metadata.format = MakeSRGB(metadata.format);
+//
+//	// リソース設定
+//	CD3DX12_RESOURCE_DESC texresDesc = CD3DX12_RESOURCE_DESC::Tex2D(
+//		metadata.format, metadata.width, (UINT)metadata.height, (UINT16)metadata.arraySize,
+//		(UINT16)metadata.mipLevels);
+//
+//	// ヒーププロパティ
+//	CD3DX12_HEAP_PROPERTIES heapProps =
+//		CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0);
+//
+//	// テクスチャ用バッファの生成
+//	result = device->CreateCommittedResource(
+//		&heapProps, D3D12_HEAP_FLAG_NONE, &texresDesc,
+//		D3D12_RESOURCE_STATE_GENERIC_READ, // テクスチャ用指定
+//		nullptr, IID_PPV_ARGS(&texbuff));
+//	assert(SUCCEEDED(result));
+//
+//	// テクスチャバッファにデータ転送
+//	for (size_t i = 0; i < metadata.mipLevels; i++) {
+//		const Image* img = scratchImg.GetImage(i, 0, 0); // 生データ抽出
+//		result = texbuff->WriteToSubresource(
+//			(UINT)i,
+//			nullptr,              // 全領域へコピー
+//			img->pixels,          // 元データアドレス
+//			(UINT)img->rowPitch,  // 1ラインサイズ
+//			(UINT)img->slicePitch // 1枚サイズ
+//		);
+//		assert(SUCCEEDED(result));
+//	}
+//
+//	// シェーダリソースビュー作成
+//	cpuDescHandleSRV = CD3DX12_CPU_DESCRIPTOR_HANDLE(descHeap->GetCPUDescriptorHandleForHeapStart(), 0, descriptorHandleIncrementSize);
+//	gpuDescHandleSRV = CD3DX12_GPU_DESCRIPTOR_HANDLE(descHeap->GetGPUDescriptorHandleForHeapStart(), 0, descriptorHandleIncrementSize);
+//
+//	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{}; // 設定構造体
+//	D3D12_RESOURCE_DESC resDesc = texbuff->GetDesc();
+//
+//	srvDesc.Format = resDesc.Format;
+//	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+//	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;//2Dテクスチャ
+//	srvDesc.Texture2D.MipLevels = 1;
+//
+//	device->CreateShaderResourceView(texbuff.Get(), //ビューと関連付けるバッファ
+//		&srvDesc, //テクスチャ設定情報
+//		cpuDescHandleSRV
+//	);
+//
+//}
 
 void Object3d::CreateModel()
 {
@@ -575,31 +576,35 @@ bool Object3d::Initialize()
 	CD3DX12_RESOURCE_DESC resourceDesc =
 		CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataB0) + 0xff) & ~0xff);
 
+
+	// ヒーププロパティ
+	CD3DX12_HEAP_PROPERTIES heapPropsB1 = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+	// リソース設定
+	CD3DX12_RESOURCE_DESC resourceDescB1 =
+		CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataB1) + 0xff) & ~0xff);
 	HRESULT result;
 
 	// 定数バッファの生成B0
 	result = device->CreateCommittedResource(
 		&heapProps, // アップロード可能
-		D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+		D3D12_HEAP_FLAG_NONE,
+		&resourceDesc, 
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
 		IID_PPV_ARGS(&constBuffB0));
 	assert(SUCCEEDED(result));
+
+
 	// 定数バッファの生成B1
 	result = device->CreateCommittedResource(
-		&heapProps,
+		&heapPropsB1,
 		D3D12_HEAP_FLAG_NONE,
-		&resourceDesc,
+		&resourceDescB1,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(&constBuffB1));
+	assert(SUCCEEDED(result));
 
-	//// 定数バッファの生成B1
-	//result = device->CreateCommittedResource(
-	//	&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-	//	D3D12_HEAP_FLAG_NONE,
-	//	&CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataB1) + 0xff) & ~0xff),
-	//	D3D12_RESOURCE_STATE_GENERIC_READ,
-	//	nullptr,
-	//	IID_PPV_ARGS(&constBuffB1));
 
 	return true;
 }
@@ -729,8 +734,6 @@ void Object3d::LoadMaterial(
 			// テクスチャ読み込み
 			LoadTexture(directoryPath, material.textureFilename);
 		}
-
-
 	}
 	file.close();
 }
@@ -738,7 +741,7 @@ void Object3d::LoadMaterial(
 /// <summary>
 /// テクスチャ読み込み
 /// </summary>
-void Object3d::LoadTexture
+bool Object3d::LoadTexture
 (const std::string& directoryPath,
 	const std::string& filename) {
 
@@ -748,7 +751,7 @@ void Object3d::LoadTexture
 	ScratchImage scratchImg{};
 
 	// ファイルパスを結合
-	string filepath = directoryPath + filename;
+	string filepath = directoryPath + filename;	// "Resources/triangle_mat/"
 
 	// ユニコード文字列に変換する
 	wchar_t wfilepath[128];
@@ -818,5 +821,5 @@ void Object3d::LoadTexture
 		&srvDesc, //テクスチャ設定情報
 		cpuDescHandleSRV
 	);
-	
+	return true;
 }

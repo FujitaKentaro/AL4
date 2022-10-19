@@ -199,7 +199,7 @@ private:// 静的メンバ関数
 	/// <summary>
 	/// テクスチャ読み込み
 	/// </summary>
-	static void LoadTexture();
+	//static void LoadTexture();
 
 	/// <summary>
 	/// モデル作成
@@ -220,7 +220,7 @@ private:// 静的メンバ関数
 	/// テクスチャ読み込み
 	/// </summary>
 	/// <returns>成否</returns>
-	static void LoadTexture(const std::string& directoryPath, const std::string& filename);
+	static bool LoadTexture(const std::string& directoryPath, const std::string& filename);
 
 public: // メンバ関数
 	bool Initialize();
