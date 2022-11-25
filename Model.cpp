@@ -1,7 +1,6 @@
 #include "Model.h"
 #include <d3dcompiler.h>
 #include <DirectXTex.h>
-
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -12,8 +11,6 @@
 using namespace DirectX;
 using namespace Microsoft::WRL;
 using namespace std;
-
-Model::Material Model::material;
 
 /// <summary>
 /// 静的メンバ変数の実体
@@ -31,29 +28,39 @@ ComPtr<ID3D12Resource> Model::indexBuff;
 ComPtr<ID3D12Resource> Model::texbuff;
 CD3DX12_CPU_DESCRIPTOR_HANDLE Model::cpuDescHandleSRV;
 CD3DX12_GPU_DESCRIPTOR_HANDLE Model::gpuDescHandleSRV;
+XMMATRIX Model::matView{};
+XMMATRIX Model::matProjection{};
+XMFLOAT3 Model::eye = { 0, 0, -50.0f };
+XMFLOAT3 Model::target = { 0, 0, 0 };
+XMFLOAT3 Model::up = { 0, 1, 0 };
 D3D12_VERTEX_BUFFER_VIEW Model::vbView{};
 D3D12_INDEX_BUFFER_VIEW Model::ibView{};
+//Model::VertexPosNormalUv Model::vertices[vertexCount];
+//unsigned short Model::indices[planeCount * 3];
 
-//Object3d::VertexPosNormalUv Object3d::vertices[vertexCount];
-//unsigned short Object3d::indices[planeCount * 3];
 std::vector<Model::VertexPosNormalUv> Model::vertices;
 std::vector<unsigned short> Model::indices;
+
+Model::Material Model::material;
+
 
 void Model::StaticInitialize(ID3D12Device* device, int window_width, int window_height)
 {
 	// nullptrチェック
 	assert(device);
 
-	// デバイス
-	 Model::device = device;
+	Model::device = device;
 
 	// デスクリプタヒープの初期化
 	InitializeDescriptorHeap();
 
+	// カメラ初期化
+	InitializeCamera(window_width, window_height);
+
 	// パイプライン初期化
 	InitializeGraphicsPipeline();
 
-	// テクスチャ読み込み
+	//// テクスチャ読み込み
 	//LoadTexture();
 
 	// モデル生成
@@ -103,6 +110,36 @@ Model* Model::Create()
 
 	return model;
 }
+void Model::SetEye(XMFLOAT3 eye)
+{
+	Model::eye = eye;
+
+	UpdateViewMatrix();
+}
+
+void Model::SetTarget(XMFLOAT3 target)
+{
+	Model::target = target;
+
+	UpdateViewMatrix();
+}
+
+void Model::CameraMoveVector(XMFLOAT3 move)
+{
+	XMFLOAT3 eye_moved = GetEye();
+	XMFLOAT3 target_moved = GetTarget();
+
+	eye_moved.x += move.x;
+	eye_moved.y += move.y;
+	eye_moved.z += move.z;
+
+	target_moved.x += move.x;
+	target_moved.y += move.y;
+	target_moved.z += move.z;
+
+	SetEye(eye_moved);
+	SetTarget(target_moved);
+}
 
 
 void Model::InitializeDescriptorHeap()
@@ -124,6 +161,26 @@ void Model::InitializeDescriptorHeap()
 
 }
 
+void Model::InitializeCamera(int window_width, int window_height)
+{
+	// ビュー行列の生成
+	matView = XMMatrixLookAtLH(
+		XMLoadFloat3(&eye),
+		XMLoadFloat3(&target),
+		XMLoadFloat3(&up));
+
+	// 平行投影による射影行列の生成
+	//constMap->mat = XMMatrixOrthographicOffCenterLH(
+	//	0, window_width,
+	//	window_height, 0,
+	//	0, 1);
+	// 透視投影による射影行列の生成
+	matProjection = XMMatrixPerspectiveFovLH(
+		XMConvertToRadians(60.0f),
+		(float)window_width / window_height,
+		0.1f, 1000.0f
+	);
+}
 
 void Model::InitializeGraphicsPipeline()
 {
@@ -660,7 +717,11 @@ void Model::CreateModelOBJ(std::string& ModelName) {
 	ibView.SizeInBytes = sizeIB;
 }
 
-
+void Model::UpdateViewMatrix()
+{
+	// ビュー行列の更新
+	matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
+}
 
 bool Model::Initialize()
 {
