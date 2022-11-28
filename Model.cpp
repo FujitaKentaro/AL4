@@ -64,7 +64,7 @@ void Model::StaticInitialize(ID3D12Device* device, int window_width, int window_
 	//LoadTexture();
 
 	// モデル生成
-	CreateModel();
+	//CreateModel();
 
 }
 
@@ -110,6 +110,28 @@ Model* Model::Create()
 
 	return model;
 }
+
+//Model* Model::Create()
+//{
+//	// 3Dオブジェクトのインスタンスを生成
+//	Model* model = new Model();
+//	if (model == nullptr) {
+//		return nullptr;
+//	}
+//
+//	// 初期化
+//	if (!model->Initialize()) {
+//		delete model;
+//		assert(0);
+//		return nullptr;
+//	}
+//	// スケールをセット
+//	float scale_val = 20;
+//	model->scale = { scale_val ,scale_val ,scale_val };
+//
+//	return model;
+//}
+
 void Model::SetEye(XMFLOAT3 eye)
 {
 	Model::eye = eye;
@@ -558,6 +580,7 @@ void Model::CreateModel()
 	ibView.Format = DXGI_FORMAT_R16_UINT;
 	ibView.SizeInBytes = sizeIB;
 }
+
 /// <summary>
 /// OBJ指定してモデル作成
 /// </summary>
@@ -701,11 +724,7 @@ void Model::CreateModelOBJ(std::string& ModelName) {
 	result = indexBuff->Map(0, nullptr, (void**)&indexMap);
 	if (SUCCEEDED(result)) {
 
-		// 全インデックスに対して
-		//for (int i = 0; i < _countof(indices); i++)
-		//{
-		//	indexMap[i] = indices[i];	// インデックスをコピー
-		//}
+		// 全インデックスに対してインデックスをコピー		
 		std::copy(indices.begin(), indices.end(), indexMap);
 
 		indexBuff->Unmap(0, nullptr);
@@ -766,7 +785,7 @@ bool Model::Initialize()
 
 	return true;
 }
-void Model::Update(XMMATRIX matView,XMMATRIX matProjection)
+void Model::Update()
 {
 	HRESULT result;
 	XMMATRIX matScale, matRot, matTrans;

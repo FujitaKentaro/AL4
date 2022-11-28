@@ -206,11 +206,13 @@ private:// 静的メンバ関数
 	/// モデル作成
 	/// </summary>
 	static void CreateModel();
+
+	public:
 	/// <summary>
 	/// モデル作成
 	/// </summary>
 	static void CreateModelOBJ(std::string& ModelName);
-
+	private:
 	/// <summary>
 	/// マテリアル読み込み
 	/// </summary>
@@ -232,7 +234,7 @@ public: // メンバ関数
 	/// <summary>
 	/// 毎フレーム処理
 	/// </summary>
-	void Update(XMMATRIX matView, XMMATRIX matProjection);
+	void Update();
 
 	/// <summary>
 	/// 描画
