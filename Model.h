@@ -232,7 +232,7 @@ public: // ƒƒ“ƒoŠÖ”
 	/// <summary>
 	/// –ˆƒtƒŒ[ƒ€ˆ—
 	/// </summary>
-	void Update(XMMATRIX matView, XMMATRIX matProjection);
+	void Update();
 
 	/// <summary>
 	/// •`‰æ

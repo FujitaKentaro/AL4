@@ -701,11 +701,7 @@ void Model::CreateModelOBJ(std::string& ModelName) {
 	result = indexBuff->Map(0, nullptr, (void**)&indexMap);
 	if (SUCCEEDED(result)) {
 
-		// 全インデックスに対して
-		//for (int i = 0; i < _countof(indices); i++)
-		//{
-		//	indexMap[i] = indices[i];	// インデックスをコピー
-		//}
+		// 全インデックスに対してインデックスをコピー		
 		std::copy(indices.begin(), indices.end(), indexMap);
 
 		indexBuff->Unmap(0, nullptr);
@@ -766,7 +762,7 @@ bool Model::Initialize()
 
 	return true;
 }
-void Model::Update(XMMATRIX matView,XMMATRIX matProjection)
+void Model::Update()
 {
 	HRESULT result;
 	XMMATRIX matScale, matRot, matTrans;
