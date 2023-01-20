@@ -337,7 +337,7 @@ void Object3d::CreateModel()
 
 	// .OBJファイルを開く
 	//file.open("Resources/triangle.obj");
-	const string modelname = "triangle_mat";
+	const string modelname = "enemy";
 	const string filename = modelname + ".obj";	// "triangle_mat.obj"
 	const string directoryPath = "Resources/" + modelname + "/";	// "Resources/triangle_mat/"
 	file.open(directoryPath + filename);	// "Resources/triangle_mat/triangle_mat.obj"
