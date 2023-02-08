@@ -22,14 +22,17 @@
     <Filter Include="scene">
       <UniqueIdentifier>{d6354c38-b653-483b-b4cd-24fb7fe075da}</UniqueIdentifier>
     </Filter>
-    <Filter Include="colider">
-      <UniqueIdentifier>{d98fe83e-0211-4a4f-90d6-e1e15a3d71bf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="object">
       <UniqueIdentifier>{ab39299d-89b6-4d3e-b477-9275589bb0e2}</UniqueIdentifier>
     </Filter>
     <Filter Include="シェーダー">
       <UniqueIdentifier>{f065fa17-ae72-4b8d-9389-d269ea525d80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソースファイル">
+      <UniqueIdentifier>{44220c0f-13d5-4316-81e9-9abdacc0cf5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダーファイル">
+      <UniqueIdentifier>{34aea469-73cf-4753-8f52-711581d54ea1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -78,26 +81,27 @@
     <ClCompile Include="scene\GameScene.cpp">
       <Filter>scene</Filter>
     </ClCompile>
-    <ClCompile Include="colider\Collision.cpp">
-      <Filter>colider</Filter>
-    </ClCompile>
-    <ClCompile Include="colider\CollisionManager.cpp">
-      <Filter>colider</Filter>
-    </ClCompile>
-    <ClCompile Include="colider\CollisionPrimitive.cpp">
-      <Filter>colider</Filter>
-    </ClCompile>
-    <ClCompile Include="colider\MeshCollider.cpp">
-      <Filter>colider</Filter>
-    </ClCompile>
-    <ClCompile Include="colider\SphereCollider.cpp">
-      <Filter>colider</Filter>
-    </ClCompile>
-    <ClCompile Include="colider\TouchableObject.cpp">
-      <Filter>colider</Filter>
-    </ClCompile>
-    <ClCompile Include="object\Player.cpp">
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Player.cpp">
       <Filter>object</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionManager.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshCollider.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="SphereCollider.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="TouchableObject.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionPrimitive.cpp">
+      <Filter>ソースファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -152,44 +156,44 @@
     <ClInclude Include="scene\GameScene.h">
       <Filter>scene</Filter>
     </ClInclude>
-    <ClInclude Include="colider\BaseCollider.h">
-      <Filter>colider</Filter>
-    </ClInclude>
-    <ClInclude Include="colider\Collision.h">
-      <Filter>colider</Filter>
-    </ClInclude>
-    <ClInclude Include="colider\CollisionAttribute.h">
-      <Filter>colider</Filter>
-    </ClInclude>
-    <ClInclude Include="colider\CollisionInfo.h">
-      <Filter>colider</Filter>
-    </ClInclude>
-    <ClInclude Include="colider\CollisionManager.h">
-      <Filter>colider</Filter>
-    </ClInclude>
-    <ClInclude Include="colider\CollisionPrimitive.h">
-      <Filter>colider</Filter>
-    </ClInclude>
-    <ClInclude Include="colider\CollisionTypes.h">
-      <Filter>colider</Filter>
-    </ClInclude>
-    <ClInclude Include="colider\MeshCollider.h">
-      <Filter>colider</Filter>
-    </ClInclude>
-    <ClInclude Include="colider\QueryCallback.h">
-      <Filter>colider</Filter>
-    </ClInclude>
-    <ClInclude Include="colider\RaycastHit.h">
-      <Filter>colider</Filter>
-    </ClInclude>
-    <ClInclude Include="colider\SphereCollider.h">
-      <Filter>colider</Filter>
-    </ClInclude>
-    <ClInclude Include="colider\TouchableObject.h">
-      <Filter>colider</Filter>
-    </ClInclude>
-    <ClInclude Include="object\Player.h">
+    <ClInclude Include="Player.h">
       <Filter>object</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseCollider.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionAttribute.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionInfo.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionManager.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionPrimitive.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionTypes.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshCollider.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="QueryCallback.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="RaycastHit.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereCollider.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="TouchableObject.h">
+      <Filter>ヘッダーファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

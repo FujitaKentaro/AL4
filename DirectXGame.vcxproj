@@ -24,15 +24,16 @@
     <ClCompile Include="base\WinApp.cpp" />
     <ClCompile Include="camera\Camera.cpp" />
     <ClCompile Include="camera\DebugCamera.cpp" />
-    <ClCompile Include="colider\Collision.cpp" />
-    <ClCompile Include="colider\CollisionManager.cpp" />
-    <ClCompile Include="colider\CollisionPrimitive.cpp" />
-    <ClCompile Include="colider\MeshCollider.cpp" />
-    <ClCompile Include="colider\SphereCollider.cpp" />
-    <ClCompile Include="colider\TouchableObject.cpp" />
+    <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="CollisionManager.cpp" />
+    <ClCompile Include="CollisionPrimitive.cpp" />
     <ClCompile Include="input\Input.cpp" />
-    <ClCompile Include="object\Player.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="MeshCollider.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
+    <ClCompile Include="SphereCollider.cpp" />
+    <ClCompile Include="TouchableObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2d\DebugText.h" />
@@ -45,26 +46,26 @@
     <ClInclude Include="3d\Object3d.h" />
     <ClInclude Include="3d\ParticleManager.h" />
     <ClInclude Include="audio\Audio.h" />
+    <ClInclude Include="BaseCollider.h" />
     <ClInclude Include="base\DirectXCommon.h" />
     <ClInclude Include="base\SafeDelete.h" />
     <ClInclude Include="base\WinApp.h" />
     <ClInclude Include="camera\Camera.h" />
     <ClInclude Include="camera\DebugCamera.h" />
-    <ClInclude Include="colider\BaseCollider.h" />
-    <ClInclude Include="colider\Collision.h" />
-    <ClInclude Include="colider\CollisionAttribute.h" />
-    <ClInclude Include="colider\CollisionInfo.h" />
-    <ClInclude Include="colider\CollisionManager.h" />
-    <ClInclude Include="colider\CollisionPrimitive.h" />
-    <ClInclude Include="colider\CollisionTypes.h" />
-    <ClInclude Include="colider\MeshCollider.h" />
-    <ClInclude Include="colider\QueryCallback.h" />
-    <ClInclude Include="colider\RaycastHit.h" />
-    <ClInclude Include="colider\SphereCollider.h" />
-    <ClInclude Include="colider\TouchableObject.h" />
+    <ClInclude Include="Collision.h" />
+    <ClInclude Include="CollisionAttribute.h" />
+    <ClInclude Include="CollisionInfo.h" />
+    <ClInclude Include="CollisionManager.h" />
+    <ClInclude Include="CollisionPrimitive.h" />
+    <ClInclude Include="CollisionTypes.h" />
     <ClInclude Include="input\Input.h" />
-    <ClInclude Include="object\Player.h" />
+    <ClInclude Include="MeshCollider.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="QueryCallback.h" />
+    <ClInclude Include="RaycastHit.h" />
     <ClInclude Include="scene\GameScene.h" />
+    <ClInclude Include="SphereCollider.h" />
+    <ClInclude Include="TouchableObject.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\BasicPixelShader.hlsl">
@@ -159,9 +160,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)2d;$(SolutionDir)3d;$(SolutionDir)camera;$(SolutionDir)audio;$(SolutionDir)scene;$(SolutionDir)base;$(SolutionDir)object;$(SolutionDir)colider;$(SolutionDir)input;$(SolutionDir)DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ConformanceMode>false</ConformanceMode>
+      <AdditionalIncludeDirectories>2d;3d;audio;base;camera;input;scene;$(SolutionDir);$(SolutionDir)2d;$(SolutionDir)3d;$(SolutionDir)camera;$(SolutionDir)audio;$(SolutionDir)scene;$(SolutionDir)base;$(SolutionDir)object;$(SolutionDir)colider;$(SolutionDir)input;$(SolutionDir)DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>
+      </MultiProcessorCompilation>
+      <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -176,10 +179,12 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ConformanceMode>false</ConformanceMode>
+      <AdditionalIncludeDirectories>2d;3d;audio;base;camera;input;scene;$(SolutionDir);$(SolutionDir)DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MultiProcessorCompilation>
+      </MultiProcessorCompilation>
+      <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
