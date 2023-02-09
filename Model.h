@@ -1,273 +1,94 @@
-#pragma once
-#pragma once
+ï»¿#pragma once
 
-#include <Windows.h>
-#include <wrl.h>
-#include <d3d12.h>
-#include <DirectXMath.h>
-#include <d3dx12.h>
-
-
+#include "Mesh.h"
+#include <string>
+#include <unordered_map>
+#include <vector>
 
 /// <summary>
-/// 3DƒIƒuƒWƒFƒNƒg
+/// ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿
 /// </summary>
-class Model
-{
-private: // ƒGƒCƒŠƒAƒX
-	// Microsoft::WRL::‚ğÈ—ª
-	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
-	// DirectX::‚ğÈ—ª
+class Model {
+  private: // ã‚¨ã‚¤ãƒªã‚¢ã‚¹
+	// Microsoft::WRL::ã‚’çœç•¥
+	template<class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
+	// DirectX::ã‚’çœç•¥
 	using XMFLOAT2 = DirectX::XMFLOAT2;
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 
-public: // ƒTƒuƒNƒ‰ƒX
-	// ’¸“_ƒf[ƒ^\‘¢‘Ì
-	struct VertexPosNormalUv
-	{
-		XMFLOAT3 pos; // xyzÀ•W
-		XMFLOAT3 normal; // –@üƒxƒNƒgƒ‹
-		XMFLOAT2 uv;  // uvÀ•W
-	};
+  private:
+	static const std::string baseDirectory;
 
-	// ’è”ƒoƒbƒtƒ@—pƒf[ƒ^\‘¢‘ÌB0
-	struct ConstBufferDataB0
-	{
-		//XMFLOAT4 color;	// F (RGBA)
-		XMMATRIX mat;	// ‚R‚c•ÏŠ·s—ñ
-	};
-	// ’è”ƒoƒbƒtƒ@—pƒf[ƒ^\‘¢‘ÌB1
-	struct ConstBufferDataB1
-	{
-		XMFLOAT3 ambient;	// ƒAƒ“ƒrƒGƒ“ƒgŒW”
-		float pad1;			// ƒpƒfƒBƒ“ƒO
-		XMFLOAT3 diffuse;	// ƒfƒBƒtƒ…[ƒYŒW”
-		float pad2;			// ƒpƒfƒBƒ“ƒO
-		XMFLOAT3 specular;	// ƒXƒyƒLƒ…ƒ‰[ŒW”
-		float alpha;		// ƒAƒ‹ƒtƒ@
-	};
-
-	/// <summary>
-	/// ƒ}ƒeƒŠƒAƒ‹
-	/// </summary>
-	struct Material {
-		std::string name;	// ƒ}ƒeƒŠƒAƒ‹–¼
-		XMFLOAT3 ambient;	// ƒAƒ“ƒrƒGƒ“ƒg‰e‹¿“x
-		XMFLOAT3 diffuse;	// ƒfƒBƒtƒ…[ƒY‰e‹¿“x
-		XMFLOAT3 specular;	// ƒXƒyƒLƒ…ƒ‰[‰e‹¿“x
-		float alpha;		// ƒAƒ‹ƒtƒ@
-		std::string textureFilename;	// ƒeƒNƒXƒ`ƒƒƒtƒ@ƒCƒ‹–¼
-		// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-		Material() {
-			ambient = { 0.3f,0.3f,0.3f };
-			diffuse = { 0.0f,0.0f,0.0f, };
-			specular = { 0.0f,0.0f,0.0f };
-			alpha = 1.0f;
-		}
-	};
-
-private: // ’è”
-	static const int division = 50;			// •ªŠ„”
-	static const float radius;				// ’ê–Ê‚Ì”¼Œa
-	static const float prizmHeight;			// ’Œ‚Ì‚‚³
-	static const int planeCount = division * 2 + division * 2;		// –Ê‚Ì”
-	static const int vertexCount = planeCount * 3;		// ’¸“_”
-
-public: // Ã“Iƒƒ“ƒoŠÖ”
-	/// <summary>
-	/// Ã“I‰Šú‰»
-	/// </summary>
-	/// <param name="device">ƒfƒoƒCƒX</param>
-	/// <param name="window_width">‰æ–Ê•</param>
-	/// <param name="window_height">‰æ–Ê‚‚³</param>
-	static void StaticInitialize(ID3D12Device* device, int window_width, int window_height);
-
-	/// <summary>
-	/// 3DƒIƒuƒWƒFƒNƒg¶¬
-	/// </summary>
-	/// <returns></returns>
-	static Model* Create();
-
-	/// <summary>
-	/// •`‰æ‘Oˆ—
-	/// </summary>
-	/// <param name="cmdList">•`‰æƒRƒ}ƒ“ƒhƒŠƒXƒg</param>
-	static void PreDraw(ID3D12GraphicsCommandList* cmdList);
-
-	/// <summary>
-	/// •`‰æŒãˆ—
-	/// </summary>
-	static void PostDraw();
-
-
-	/// <summary>
-	/// ‹“_À•W‚Ìæ“¾
-	/// </summary>
-	/// <returns>À•W</returns>
-	static const XMFLOAT3& GetEye() { return eye; }
-
-	/// <summary>
-	/// ‹“_À•W‚Ìİ’è
-	/// </summary>
-	/// <param name="position">À•W</param>
-	static void SetEye(XMFLOAT3 eye);
-
-	/// <summary>
-	/// ’‹“_À•W‚Ìæ“¾
-	/// </summary>
-	/// <returns>À•W</returns>
-	static const XMFLOAT3& GetTarget() { return target; }
-
-	/// <summary>
-	/// ’‹“_À•W‚Ìİ’è
-	/// </summary>
-	/// <param name="position">À•W</param>
-	static void SetTarget(XMFLOAT3 target);
-
-	/// <summary>
-	/// ƒxƒNƒgƒ‹‚É‚æ‚éˆÚ“®
-	/// </summary>
-	/// <param name="move">ˆÚ“®—Ê</param>
-	static void CameraMoveVector(XMFLOAT3 move);
-
-
-
-
-
-private: // Ã“Iƒƒ“ƒo•Ï”
-	// ƒfƒoƒCƒX
+  private: // é™çš„ãƒ¡ãƒ³ãƒå¤‰æ•°
+	// ãƒ‡ãƒã‚¤ã‚¹
 	static ID3D12Device* device;
-	// ƒfƒXƒNƒŠƒvƒ^ƒTƒCƒY
+	// ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã‚µã‚¤ã‚º
 	static UINT descriptorHandleIncrementSize;
-	// ƒRƒ}ƒ“ƒhƒŠƒXƒg
-	static ID3D12GraphicsCommandList* cmdList;
-	// ƒ‹[ƒgƒVƒOƒlƒ`ƒƒ
-	static ComPtr<ID3D12RootSignature> rootsignature;
-	// ƒpƒCƒvƒ‰ƒCƒ“ƒXƒe[ƒgƒIƒuƒWƒFƒNƒg
-	static ComPtr<ID3D12PipelineState> pipelinestate;
-	// ƒfƒXƒNƒŠƒvƒ^ƒq[ƒv
-	static ComPtr<ID3D12DescriptorHeap> descHeap;
-	// ’¸“_ƒoƒbƒtƒ@
-	static ComPtr<ID3D12Resource> vertBuff;
-	// ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@
-	static ComPtr<ID3D12Resource> indexBuff;
-	// ƒeƒNƒXƒ`ƒƒƒoƒbƒtƒ@
-	static ComPtr<ID3D12Resource> texbuff;
-	// ƒVƒF[ƒ_ƒŠƒ\[ƒXƒrƒ…[‚Ìƒnƒ“ƒhƒ‹(CPU)
-	static CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
-	// ƒVƒF[ƒ_ƒŠƒ\[ƒXƒrƒ…[‚Ìƒnƒ“ƒhƒ‹(CPU)
-	static CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
-	// ƒrƒ…[s—ñ
-	static XMMATRIX matView;
-	// Ë‰es—ñ
-	static XMMATRIX matProjection;
-	// ‹“_À•W
-	static XMFLOAT3 eye;
-	// ’‹“_À•W
-	static XMFLOAT3 target;
-	// ã•ûŒüƒxƒNƒgƒ‹
-	static XMFLOAT3 up;
-	// ’¸“_ƒoƒbƒtƒ@ƒrƒ…[
-	static D3D12_VERTEX_BUFFER_VIEW vbView;
-	// ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@ƒrƒ…[
-	static D3D12_INDEX_BUFFER_VIEW ibView;
-	// ’¸“_ƒf[ƒ^”z—ñ
-	/*static VertexPosNormalUv vertices[vertexCount];*/
-	static std::vector<VertexPosNormalUv> vertices;
-	// ’¸“_ƒCƒ“ƒfƒbƒNƒX”z—ñ
-	/*static unsigned short indices[planeCount * 3];*/
-	static std::vector<unsigned short> indices;
 
-	// ƒ}ƒeƒŠƒAƒ‹
-	static Material material;
-
-private:// Ã“Iƒƒ“ƒoŠÖ”
+  public: // é™çš„ãƒ¡ãƒ³ãƒé–¢æ•°
 	/// <summary>
-	/// ƒfƒXƒNƒŠƒvƒ^ƒq[ƒv‚Ì‰Šú‰»
+	/// é™çš„åˆæœŸåŒ–
 	/// </summary>
-	static void InitializeDescriptorHeap();
+	/// <param name="device">ãƒ‡ãƒã‚¤ã‚¹</param>
+	static void StaticInitialize(ID3D12Device* device);
 
 	/// <summary>
-	/// ƒJƒƒ‰‰Šú‰»
+	/// OBJãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ãƒ¡ãƒƒã‚·ãƒ¥ç”Ÿæˆ
 	/// </summary>
-	/// <param name="window_width">‰æ–Ê‰¡•</param>
-	/// <param name="window_height">‰æ–Êc•</param>
-	static void InitializeCamera(int window_width, int window_height);
+	/// <param name="modelname">ãƒ¢ãƒ‡ãƒ«å</param>
+	/// <returns>ç”Ÿæˆã•ã‚ŒãŸãƒ¢ãƒ‡ãƒ«</returns>
+	static Model* CreateFromOBJ(const std::string& modelname);
+
+  public: // ãƒ¡ãƒ³ãƒé–¢æ•°
+	/// <summary>
+	/// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	/// </summary>
+	~Model();
 
 	/// <summary>
-	/// ƒOƒ‰ƒtƒBƒbƒNƒpƒCƒvƒ‰ƒCƒ“¶¬
+	/// åˆæœŸåŒ–
 	/// </summary>
-	/// <returns>¬”Û</returns>
-	static void InitializeGraphicsPipeline();
+	/// <param name="modelname">ãƒ¢ãƒ‡ãƒ«å</param>
+	void Initialize(const std::string& modelname);
 
 	/// <summary>
-	/// ƒ‚ƒfƒ‹ì¬
+	/// æç”»
 	/// </summary>
-	static void CreateModel();
+	/// <param name="cmdList">å‘½ä»¤ç™ºè¡Œå…ˆã‚³ãƒãƒ³ãƒ‰ãƒªã‚¹ãƒˆ</param>
+	void Draw(ID3D12GraphicsCommandList* cmdList);
 
-	public:
-	/// <summary>
-	/// ƒ‚ƒfƒ‹ì¬
-	/// </summary>
-	static void CreateModelOBJ(std::string& ModelName);
-	private:
-	/// <summary>
-	/// ƒ}ƒeƒŠƒAƒ‹“Ç‚İ‚İ
-	/// </summary>
-	static void LoadMaterial(const std::string& directoryPath, const std::string& filename);
+  private: // ãƒ¡ãƒ³ãƒå¤‰æ•°
+	// åå‰
+	std::string name;
+	// ãƒ¡ãƒƒã‚·ãƒ¥ã‚³ãƒ³ãƒ†ãƒŠ
+	std::vector<Mesh*> meshes;
+	// ãƒãƒ†ãƒªã‚¢ãƒ«ã‚³ãƒ³ãƒ†ãƒŠ
+	std::unordered_map<std::string, Material*> materials;
+	// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒãƒ†ãƒªã‚¢ãƒ«
+	Material* defaultMaterial = nullptr;
+	// ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—
+	ComPtr<ID3D12DescriptorHeap> descHeap;
 
+  private: // ãƒ¡ãƒ³ãƒé–¢æ•°
 	/// <summary>
-	/// ƒeƒNƒXƒ`ƒƒ“Ç‚İ‚İ
+	/// ãƒãƒ†ãƒªã‚¢ãƒ«èª­ã¿è¾¼ã¿
 	/// </summary>
-	/// <returns>¬”Û</returns>
-	static bool LoadTexture(const std::string& directoryPath, const std::string& filename);
-
-	/// <summary>
-	/// ƒrƒ…[s—ñ‚ğXV
-	/// </summary>
-	static void UpdateViewMatrix();
-
-public: // ƒƒ“ƒoŠÖ”
-	bool Initialize();
-	/// <summary>
-	/// –ˆƒtƒŒ[ƒ€ˆ—
-	/// </summary>
-	void Update();
+	void LoadMaterial(const std::string& directoryPath, const std::string& filename);
 
 	/// <summary>
-	/// •`‰æ
+	/// ãƒãƒ†ãƒªã‚¢ãƒ«ç™»éŒ²
 	/// </summary>
-	void Draw();
+	void AddMaterial(Material* material);
 
 	/// <summary>
-	/// À•W‚Ìæ“¾
+	/// ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—ã®ç”Ÿæˆ
 	/// </summary>
-	/// <returns>À•W</returns>
-	const XMFLOAT3& GetPosition() const { return position; }
+	void CreateDescriptorHeap();
 
 	/// <summary>
-	/// À•W‚Ìİ’è
+	/// ãƒ†ã‚¯ã‚¹ãƒãƒ£èª­ã¿è¾¼ã¿
 	/// </summary>
-	/// <param name="position">À•W</param>
-	void SetPosition(const XMFLOAT3& position) { this->position = position; }
-
-private: // ƒƒ“ƒo•Ï”
-	//ComPtr<ID3D12Resource> constBuff; // ’è”ƒoƒbƒtƒ@
-	ComPtr<ID3D12Resource> constBuffB0; // ’è”ƒoƒbƒtƒ@
-	ComPtr<ID3D12Resource> constBuffB1; // ’è”ƒoƒbƒtƒ@
-
-	// F
-	XMFLOAT4 color = { 1,1,1,1 };
-	// ƒ[ƒJƒ‹ƒXƒP[ƒ‹
-	XMFLOAT3 scale = { 1,1,1 };
-	// X,Y,Z²‰ñ‚è‚Ìƒ[ƒJƒ‹‰ñ“]Šp
-	XMFLOAT3 rotation = { 0,0,0 };
-	// ƒ[ƒJƒ‹À•W
-	XMFLOAT3 position = { 0,0,0 };
-	// ƒ[ƒJƒ‹ƒ[ƒ‹ƒh•ÏŠ·s—ñ
-	XMMATRIX matWorld;
-	Model* parent;
+	void LoadTextures();
 };
-
