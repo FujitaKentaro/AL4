@@ -4,20 +4,20 @@ using namespace DirectX;
 
 bool Collision::CheckSphere2Plane(const Sphere& sphere, const Plane& plane, XMVECTOR* inter)
 {
-    //座標系の頂点から球の中心座標への距離
-    XMVECTOR distV = XMVector3Dot(sphere.center,plane.nolmal);
-    //平面の距離を減算することで、平面と球の中心との距離が出る
-    float dist = distV.m128_f32[0] - plane.distance;
-    //距離の絶対値が半径より大きければ当たっていない
-    if (fabsf(dist) > sphere.radius) {return false;}
+	//座標系の頂点から球の中心座標への距離
+	XMVECTOR distV = XMVector3Dot(sphere.center, plane.normal);
+	//平面の距離を減算することで、平面と球の中心との距離が出る
+	float dist = distV.m128_f32[0] - plane.distance;
+	//距離の絶対値が半径より大きければ当たっていない
+	if (fabsf(dist) > sphere.radius) { return false; }
 
-    //疑似交点を計算
-    if (inter) {
-        //平面上の最近接点を、疑似交点とする
-        *inter = -dist * plane.nolmal + sphere.center;
-    }
+	//疑似交点を計算
+	if (inter) {
+		//平面上の最近接点を、疑似交点とする
+		*inter = -dist * plane.normal + sphere.center;
+	}
 
-    return true;
+	return true;
 }
 
 void Collision::ClosestPtPoint2Triangle(const DirectX::XMVECTOR& point, const Triangle& triangle, DirectX::XMVECTOR* closest)
@@ -105,12 +105,35 @@ bool Collision::CheckSphere2Triangle(const Sphere& sphere, const Triangle& trian
 	//（同じベクトル同士の内積は三平方の定理のルート内部の式と一致する）
 	v = XMVector3Dot(v, v);
 	//球と三角形の距離が半分以下なら当たってない
-	if (v.m128_f32[0] > sphere.radius * sphere.radius){return false;}
+	if (v.m128_f32[0] > sphere.radius * sphere.radius) { return false; }
 	//疑似交点
 	if (inter)
 	{
 		//三角形上の最近接点ｐを疑似交点とする
 		*inter = p;
 	}
+	return true;
+}
+
+bool Collision::CheckRay2Plane(const Ray& ray, const Plane& plane, float* distnce, DirectX::XMVECTOR* inter)
+{
+	const float epsilon = 1.0e-5f;//誤差吸収用の微小な値
+	//面法線とレイの方向ベクトルの内積
+	float d1 = XMVector3Dot(plane.normal, ray.dir).m128_f32[0];
+	//裏面には当たり判定
+	if (d1 > -epsilon) { return false; }
+	//始点と原点の距離(平面の法線方向)
+	//面法線とレイの始点座標(位置ベクトル)の内積
+	float d2 = XMVector3Dot(plane.normal, ray.start).m128_f32[0];
+	//始点と平面の距離（平面の法線方向）
+	float dist = d2 - plane.distance;
+	//始点と平面の距離（レイ方向）
+	float t = dist / -d1;
+	//交点が始点より後ろにあるので、当たらない
+	if (t < 0) { return false; }
+	//距離を書き込む
+	if (distnce) { *distnce = t; }
+	//交点を計算
+	if (inter) { *inter = ray.start + t * ray.dir; }
 	return true;
 }

@@ -19,7 +19,7 @@ struct  Sphere
 struct  Plane
 {
 	//中心座標
-	DirectX::XMVECTOR nolmal = { 0,1,0,0 };
+	DirectX::XMVECTOR normal = { 0,1,0,0 };
 	//半径
 	float distance = 0.0f;
 };
@@ -35,4 +35,13 @@ public:
 	DirectX::XMVECTOR p2;
 	//法線ベクトル
 	DirectX::XMVECTOR normal;
+};
+
+struct Ray
+{
+	//視点座標
+	DirectX::XMVECTOR start = { 0,0,0,1 };
+
+	//方向
+	DirectX::XMVECTOR dir = { 1,0,0,0 };
 };
