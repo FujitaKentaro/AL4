@@ -35,13 +35,18 @@ public:
 	DirectX::XMVECTOR p2;
 	//法線ベクトル
 	DirectX::XMVECTOR normal;
+
+	/// <summary>
+	/// 法線ベクトル
+	/// </summary>
+	void ComputeNormal();
 };
 
 struct Ray
 {
 	//視点座標
-	DirectX::XMVECTOR start = { 0,0,0,1 };
+	DirectX::XMVECTOR start = {0,0,0,1};
 
 	//方向
-	DirectX::XMVECTOR dir = { 1,0,0,0 };
+	DirectX::XMVECTOR dir = {1,0,0,0};
 };

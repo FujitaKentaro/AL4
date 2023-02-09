@@ -160,6 +160,7 @@ void GameScene::Update()
 			<< inter.m128_f32[0] << ","
 			<< inter.m128_f32[1] << ","
 			<< inter.m128_f32[2] << ")";
+
 		debugText.Print(spherestr.str(),50,220,1.0f);
 	}*/
 
@@ -182,29 +183,84 @@ void GameScene::Update()
 	//	debugText.Print(spherestr.str(), 50, 220, 1.0f);
 	//}
 
-	//レイと平面の当たり判定
-	XMVECTOR inter;
-	float distance;
-	bool hit = Collision::CheckRay2Plane(ray, plane, &distance, &inter);
-	if (hit)
+	////レイと平面の当たり判定
+	//XMVECTOR inter;
+	//float distance;
+	//bool hit = Collision::CheckRay2Plane(ray, plane,&distance, &inter);
+	//if (hit)
+	//{
+	//	debugText.Print("HIT", 50, 200, 1.0f);
+	//	//stringstreamをリセットし、交点座標を埋め込む
+	//	std::ostringstream raystr;
+	//	raystr.str("");
+	//	raystr.clear();
+	//	raystr << "("
+	//		<< std::fixed << std::setprecision(2)
+	//		<< inter.m128_f32[0] << ","
+	//		<< inter.m128_f32[1] << ","
+	//		<< inter.m128_f32[2] << ")";
+
+	//	debugText.Print(raystr.str(), 50, 220, 1.0f);
+	//}
+
+	////レイと三角形の当たり判定
+	//XMVECTOR inter;
+	//float distance;
+	//bool hit = Collision::CheckRay2Triangle(ray, triangle,&distance, &inter);
+	//if (hit)
+	//{
+	//	debugText.Print("HIT", 50, 200, 1.0f);
+	//	//stringstreamをリセットし、交点座標を埋め込む
+	//	std::ostringstream raystr;
+	//	raystr.str("");
+	//	raystr.clear();
+	//	raystr << "("
+	//		<< std::fixed << std::setprecision(2)
+	//		<< inter.m128_f32[0] << ","
+	//		<< inter.m128_f32[1] << ","
+	//		<< inter.m128_f32[2] << ")";
+
+	//	debugText.Print(raystr.str(), 50, 220, 1.0f);
+
+	//	raystr.str("");
+	//	raystr.clear();
+	//	raystr << "("
+	//		<< std::fixed << std::setprecision(2) << distance << ")";
+
+	//	debugText.Print(raystr.str(), 50, 240, 1.0f);
+	//}
 	{
-		debugText.Print("HIT", 50, 200, 1.0f);
-		//stringstreamをリセットし、交点座標を埋め込む
+		//レイと球の当たり判定
+		float distance;
+		XMVECTOR inter;
+		bool hit = Collision::CheckRay2Sphere(ray, sphere, &distance, &inter);
+		if (hit) {
+			debugText.Print("HIT", 50, 260, 1.0f);
+			//stringstreamをリセットし、交点座標を埋め込む
 		std::ostringstream raystr;
 		raystr.str("");
 		raystr.clear();
-		raystr << "("
+		raystr << "inter:("
 			<< std::fixed << std::setprecision(2)
 			<< inter.m128_f32[0] << ","
 			<< inter.m128_f32[1] << ","
 			<< inter.m128_f32[2] << ")";
 
 		debugText.Print(raystr.str(), 50, 220, 1.0f);
+
+		raystr.str("");
+		raystr.clear();
+		raystr << "("
+			<< std::fixed << std::setprecision(2) << distance << ")";
+
+		debugText.Print(raystr.str(), 50, 240, 1.0f);
+		}
+
 	}
 
-	debugText.Print("AD: move camera LeftRight", 50, 50, 1.0f);
-	debugText.Print("WS: move camera UpDown", 50, 70, 1.0f);
-	debugText.Print("ARROW: move camera FrontBack", 50, 90, 1.0f);
+		debugText.Print("AD: move camera LeftRight", 50, 50, 1.0f);
+		debugText.Print("WS: move camera UpDown", 50, 70, 1.0f);
+		debugText.Print("ARROW: move camera FrontBack", 50, 90, 1.0f);
 }
 
 void GameScene::Draw()
