@@ -107,13 +107,22 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	//レイの初期値を設定
 	ray.start = XMVectorSet(0, 20, 0, 1); //原点やや上
 	ray.dir = XMVectorSet(0, -1, 0, 0);
+
+	scene = 0;
 }
 
 void GameScene::Update()
 {
 	camera->Update();
-
+	switch (scene)
 	{
+	case 0:
+		if (input->TriggerKey(DIK_SPACE)) { scene = 1; }
+		break;
+	case 1:
+	{
+		if (input->TriggerKey(DIK_SPACE)) { scene = 0; }
+
 		//球移動
 		{
 			XMVECTOR moveY = XMVectorSet(0, 0.01f, 0, 0);
@@ -136,11 +145,11 @@ void GameScene::Update()
 		//	XMVECTOR moveZ = XMVectorSet(0, 0, 0.01f, 0);
 		//	if (input->PushKey(DIK_W)) { ray.start += moveZ; }
 		//	else if (input->PushKey(DIK_S)) { ray.start -= moveZ; }
-
 		//	XMVECTOR moveX = XMVectorSet(0.01f, 0, 0, 0);
 		//	if (input->PushKey(DIK_A)) { ray.start += moveX; }
 		//	else if (input->PushKey(DIK_D)) { ray.start -= moveX; }
 		//}
+
 		std::ostringstream raystr;
 		raystr << "Sphere:("
 			<< std::fixed << std::setprecision(2) //小数点以下2桁まで
@@ -168,7 +177,7 @@ void GameScene::Update()
 		}
 		else {
 			objRay->SetModel(modelRay);
-		}		
+		}
 		////レイと三角形の当たり判定
 		//float distance;
 		//bool hit2 = Collision::CheckRay2Triangle(ray, triangle, &distance, &inter);
@@ -176,12 +185,12 @@ void GameScene::Update()
 		//
 		//}
 		//球と平面の当たり判定		
-		/*bool hit3 = Collision::CheckSphere2Triangle(sphere, triangle, &inter);
-		if (hit3) {
-			std::ostringstream raystr;
-			raystr << "球と平面の当たり判定";
-			debugText.Print(raystr.str(), 50, 220, 1.0f);
-		}*/
+		//bool hit3 = Collision::CheckSphere2Triangle(sphere, triangle, &inter);
+		//if (hit3) {
+		//	std::ostringstream raystr;
+		//	raystr << "球と平面の当たり判定";
+		//	debugText.Print(raystr.str(), 50, 220, 1.0f);
+		//}
 		//レイと平面の当たり判定
 		float distance4;
 		bool hit4 = Collision::CheckRay2Plane(ray, plane, &distance4, &inter);
@@ -189,7 +198,7 @@ void GameScene::Update()
 			std::ostringstream raystr;
 			raystr << " Ray+Plane = HIT";
 			debugText.Print(raystr.str(), 50, 240, 1.0f);
-		}	
+		}
 
 
 	}
@@ -213,6 +222,11 @@ void GameScene::Update()
 	debugText.Print("AD: move camera LeftRight", 50, 50, 1.0f);
 	debugText.Print("WS: move camera UpDown", 50, 70, 1.0f);
 	debugText.Print("ARROW: move camera FrontBack", 50, 90, 1.0f);
+	break;
+	}
+
+	debugText.Print("SPACE: SCENE change", 550, 50, 1.0f);
+
 }
 
 void GameScene::Draw()
@@ -239,14 +253,14 @@ void GameScene::Draw()
 #pragma region 3Dオブジェクト描画
 	// 3Dオブジェクト描画前処理
 	Object3d::PreDraw(cmdList);
-
-	// 3Dオブクジェクトの描画
-	objSkydome->Draw();
-	objGround->Draw();
-	//objFighter->Draw();
-	objSphere->Draw();
-	objRay->Draw();
-
+	if (scene == 1) {
+		// 3Dオブクジェクトの描画
+		objSkydome->Draw();
+		objGround->Draw();
+		//objFighter->Draw();
+		objSphere->Draw();
+		objRay->Draw();
+	}
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>

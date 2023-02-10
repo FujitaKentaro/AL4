@@ -60,6 +60,7 @@ class GameScene {
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
+	int scene = 0;
 	Sprite* spriteBG = nullptr;
 
 	Model* modelSkydome = nullptr;
