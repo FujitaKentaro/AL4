@@ -170,36 +170,7 @@ void GameScene::Update()
 			objRay->SetModel(modelRay);
 		}
 
-		////球と平面の当たり判定
-		//XMVECTOR inter;
-		//bool hit = Collision::CheckSphere2Triangle(sphere, triangle,&inter);
-		//if (hit) {
-		//
-		//}
-
-		////レイと平面の当たり判定
-		//XMVECTOR inter;
-		//float distance;
-		//bool hit = Collision::CheckRay2Plane(ray,plane,&distance,&inter);
-		//if (hit) {
-		//
-		//}
-
-		////レイと三角形の当たり判定
-		//XMVECTOR inter;
-		//float distance;
-		//bool hit = Collision::CheckRay2Triangle(ray, triangle, &distance, &inter);
-		//if (hit) {
-		//
-		//}
-
-		////レイと平面の当たり判定
-		//XMVECTOR inter;
-		//float distance;
-		//bool hit = Collision::CheckRay2Plane(ray, plane, &distance, &inter);
-		//if (hit) {
-		//
-		//}	
+		
 
 	}
 
