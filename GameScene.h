@@ -7,7 +7,7 @@
 #include "Object3d.h"
 #include "Sprite.h"
 #include <DirectXMath.h>
-#include"CollisionPrimitive.h"
+#include "CollisionPrimitive.h"
 
 /// <summary>
 /// ゲームシーン
@@ -70,12 +70,13 @@ class GameScene {
 	Object3d* objGround = nullptr;
 	Object3d* objFighter = nullptr;
 
-	//当たり判定￥　球
+	//当たり判定 球
 	Sphere sphere;
-	//当たり判定　平面
+	//当たり判定 平面
 	Plane plane;
-	//三角形
+	//当たり判定 三角形
 	Triangle triangle;
-	//当たり判定　レイ
+	//当たり判定 レイ
 	Ray ray;
+
 };
