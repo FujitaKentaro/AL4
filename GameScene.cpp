@@ -147,7 +147,7 @@ void GameScene::Update()
 			<< ray.start.m128_f32[0] << ","   //x
 			<< ray.start.m128_f32[1] << ","   //y
 			<< ray.start.m128_f32[2] << ")";   //z
-		debugText.Print(raystr.str(), 50, 180, 1.0f);
+		debugText.Print(raystr.str(), 50, 200, 1.0f);
 	}
 	{
 		//球と平面の当たり判定
@@ -161,16 +161,36 @@ void GameScene::Update()
 		}
 		//レイと球の当たり判定
 		float distance;
-		bool hitRay = Collision::CheckRay2Sphere(ray, sphere, &distance, &inter);
-		if (hitRay) {
+		bool hit2 = Collision::CheckRay2Sphere(ray, sphere, &distance, &inter);
+		if (hit2) {
 			objSphere->SetModel(modelSphere1);
 			objRay->SetModel(modelRay1);
 		}
 		else {
 			objRay->SetModel(modelRay);
-		}
+		}		
+		////レイと三角形の当たり判定
+		//float distance;
+		//bool hit2 = Collision::CheckRay2Triangle(ray, triangle, &distance, &inter);
+		//if (hit2) {
+		//
+		//}
+		//球と平面の当たり判定		
+		/*bool hit3 = Collision::CheckSphere2Triangle(sphere, triangle, &inter);
+		if (hit3) {
+			std::ostringstream raystr;
+			raystr << "球と平面の当たり判定";
+			debugText.Print(raystr.str(), 50, 220, 1.0f);
+		}*/
+		//レイと平面の当たり判定
+		float distance4;
+		bool hit4 = Collision::CheckRay2Plane(ray, plane, &distance4, &inter);
+		if (hit4) {
+			std::ostringstream raystr;
+			raystr << " Ray+Plane = HIT";
+			debugText.Print(raystr.str(), 50, 240, 1.0f);
+		}	
 
-		
 
 	}
 
