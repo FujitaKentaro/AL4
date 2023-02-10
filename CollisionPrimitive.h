@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 /// <summary>
 ///当たり判定プリミティブ
 /// </summary>
@@ -30,7 +29,6 @@ public:
 	DirectX::XMVECTOR normal;
 
 	void ComputeNormal();
-
 };
 
 struct Ray
@@ -40,3 +38,9 @@ struct Ray
 	DirectX::XMVECTOR dir = { 1,0,0,0 };
 
 };
+
+class CollisionPrimitive
+{
+	
+};
+
