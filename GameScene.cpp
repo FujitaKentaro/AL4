@@ -178,21 +178,21 @@ void GameScene::Update()
 		else {
 			objRay->SetModel(modelRay);
 		}
-		//レイと三角形の当たり判定
-		float distance2;
-		bool hit5 = Collision::CheckRay2Triangle(ray, triangle, &distance2, &inter);
-		if (hit5) {
-			std::ostringstream raystr;
-			raystr << " triangre+Ray = HIT";
-			debugText.Print(raystr.str(), 50, 220, 1.0f);
-		}
-		//球と平面の当たり判定		
-		bool hit3 = Collision::CheckSphere2Triangle(sphere, triangle, &inter);
-		if (hit3) {
-			std::ostringstream raystr;
-			raystr << " triangre+sphere = HIT";
-			debugText.Print(raystr.str(), 50, 240, 1.0f);
-		}
+		////レイと三角形の当たり判定
+		//float distance2;
+		//bool hit5 = Collision::CheckRay2Triangle(ray, triangle, &distance2, &inter);
+		//if (hit5) {
+		//	std::ostringstream raystr;
+		//	raystr << " triangre+Ray = HIT";
+		//	debugText.Print(raystr.str(), 50, 220, 1.0f);
+		//}
+		////球と平面の当たり判定		
+		//bool hit3 = Collision::CheckSphere2Triangle(sphere, triangle, &inter);
+		//if (hit3) {
+		//	std::ostringstream raystr;
+		//	raystr << " triangre+sphere = HIT";
+		//	debugText.Print(raystr.str(), 50, 240, 1.0f);
+		//}
 		//レイと平面の当たり判定
 		float distance3;
 		bool hit4 = Collision::CheckRay2Plane(ray, plane, &distance3, &inter);
